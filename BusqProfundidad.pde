@@ -2,6 +2,9 @@
     Para mostrar recorridos en espacios de búsqueda
     
     Búsqueda en Profundidad
+    
+    manc, UABCS/DSC
+    Verano de 2020
 */
 
 import java.util.Stack;
