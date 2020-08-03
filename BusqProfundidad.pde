@@ -14,7 +14,7 @@ int Radio = 10;
 boolean MostrarId = false;
 boolean Buscando = false;
 
-int Divisiones=20;
+int Divisiones=16;
 
 int AnchoPincel = 2;
 int SizeId = 12;
