@@ -154,6 +154,7 @@ void draw()
                 n.Marcado = n.Vecino = false;
             }
             Pila.push( NodoMarcado1 );
+            noLoop();
         }
     } else {
         // Iteraciones de la búsqueda en profundidad
@@ -172,6 +173,7 @@ void draw()
     }
     for (Nodo n : Nodos)
         n.Dibujar(); //<>//
+
 }
 
 void mouseClicked()
@@ -180,8 +182,10 @@ void mouseClicked()
 
   // Nuevo nodo o arista
   if ( mouseButton == RIGHT ) {
-    if ( Buscando )
+    if ( Buscando ) {
+      redraw();
       return;
+    }
     
     // Mouse sobre un nodo: no se agrega nada
     for ( Nodo a : Nodos ) 
@@ -199,7 +203,10 @@ void mouseClicked()
     }
   
   } else { // Botón izquierdo: marcar
-  
+    if ( Buscando ) {
+      redraw();
+      return;
+    }
     for ( Nodo a : Nodos) {
       if ( a.mouseIn() ) {
         n = a;
