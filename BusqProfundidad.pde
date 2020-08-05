@@ -154,7 +154,7 @@ void draw()
                 n.Marcado = n.Vecino = false;
             }
             Pila.push( NodoMarcado1 );
-            noLoop();
+            //noLoop();
         }
     } else {
         // Iteraciones de la búsqueda en profundidad
