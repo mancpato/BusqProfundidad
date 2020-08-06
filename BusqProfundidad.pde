@@ -1,7 +1,8 @@
 /* 
     Para mostrar recorridos en espacios de búsqueda
     
-    Búsqueda en Profundidad
+    Búsqueda en Profundidad simple. 
+    Al encontrar el nodo objetivo se detiene.
     
     manc, UABCS/DSC
     Verano de 2020
@@ -9,12 +10,12 @@
 
 import java.util.Stack;
 
-int RadioMin = 10, RadioMax = 12;
-int Radio = 10;
+int RadioMin = 10, RadioMax = 20;
+int Radio = 12;
 boolean MostrarId = false;
 boolean Buscando = false;
 
-int Divisiones=16;
+int Divisiones=15;
 
 int AnchoPincel = 2;
 int SizeId = 12;
@@ -147,14 +148,15 @@ void draw()
         }
 
         // Aquí inicia el algoritmo de búsqueda en profundidad
-        if ( NodosMarcados == 1 && key == ' ' ) {
+        if ( NodosMarcados > 0  &&  key == ' ' ) {
             Buscando = true;
             for (Nodo n : Nodos) {
                 n.Color = ColorNoVisitado;
                 n.Marcado = n.Vecino = false;
             }
             Pila.push( NodoMarcado1 );
-            //noLoop();
+            if ( NodosMarcados == 2 )
+                NodoMarcado2.Color = ColorNodoMarcado;
         }
     } else {
         // Iteraciones de la búsqueda en profundidad
@@ -162,18 +164,29 @@ void draw()
         if ( !Pila.isEmpty() && key==' ' ) {
             u = Pila.pop();
             for ( Nodo v : u.aristas ) {
+                if ( NodosMarcados == 2  &&  v == NodoMarcado2 )
+                    ObjetivoEncontrado();
                 if ( v.Color  == ColorNoVisitado ) {
                     v.Color = ColorPendiente;
                     Pila.add(v);
                 }
             }
             u.Color = ColorVisitado;
-            //delay(50);
+            //noLoop();
         }
     }
     for (Nodo n : Nodos)
         n.Dibujar(); //<>//
+}
 
+void ObjetivoEncontrado()
+{
+    fill(0);
+    textSize(20);
+    text("¡Nodo objetivo", 620, 50);
+    text("encontrado!", 620, 80);
+    circle(NodoMarcado2.x, NodoMarcado2.y, Radio+5);
+    noLoop();
 }
 
 void mouseClicked()

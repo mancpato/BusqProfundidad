@@ -60,17 +60,6 @@ class Nodo {
     ellipse(x, y, Radio, Radio);
     stroke(25);
   }
-  void Parpadeo() {
-    for ( int i=0 ; i<5 ; i++ ) {
-      fill(ColorPendiente);
-      ellipse(x, y, Radio+5, Radio+5);
-      delay(20);
-      fill(ColorNoVisitado);
-      ellipse(x, y, Radio+5, Radio+5);
-      delay(20);
-    }
-      
-  }
   void MostrarId() {
     textSize(SizeId);
     fill(0);
