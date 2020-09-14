@@ -3,8 +3,8 @@
     
     Búsqueda en Profundidad
     
-    manc, UABCS/DSC
-    Verano de 2020
+    Miguel Angel Norzagaray Cosío
+    UABCS/DSC
 */
 
 import java.util.Stack;
@@ -38,9 +38,7 @@ color ColorVisitado = #FFFF00;
 color ColorAristaNormal = 150;
 color COlorAristaAdyacente = 50;
 
-int MaxNodos = 32;
 int NodosMarcados = 0;
-
 boolean MoviendoNodo = false;
 boolean MarcandoNodos = false;
 
@@ -50,14 +48,70 @@ Nodo NodoMarcado1, NodoMarcado2;
 int CuantosNodosHay = 0;
 
 ArrayList<Nodo> Nodos = new ArrayList();
-
 Stack<Nodo> Pila = new Stack<Nodo>();
 
 void setup()
 {
+    size(800,600);
+    
+    MkGrafo();
+}
+
+void draw()
+{
+    background(ColorFondo);
+    cursor(CROSS);
+    strokeWeight(AnchoPincel);
+  
+    for (Nodo n : Nodos) 
+        n.DibujarAristas();
+  
+    if ( !Buscando ) {
+        for (Nodo n : Nodos) {
+            if ( MostrarId )
+                n.MostrarId();
+            if ( n.mouseIn()==true ) {
+                n.Color = n.Marcado ? ColorNodoMarcadoTocado : ColorNodoTocado;
+                n.MostrarId();
+            } else
+                n.Color = n.Marcado ? ColorNodoMarcado : ColorNodoNormal;
+            if ( n.Vecino == true )
+                n.Color = ColorNodoVecino;
+        }
+
+        // Aquí inicia el algoritmo de búsqueda en profundidad
+        if ( NodosMarcados == 1 && key == ' ' ) {
+            Buscando = true;
+            for (Nodo n : Nodos) {
+                n.Color = ColorNoVisitado;
+                n.Marcado = n.Vecino = false;
+            }
+            Pila.push( NodoMarcado1 );
+            //noLoop();
+        }
+    } else {
+        // Iteraciones de la búsqueda en profundidad
+        Nodo u;
+        if ( !Pila.isEmpty() && key==' ' ) {
+            u = Pila.pop();
+            for ( Nodo v : u.aristas ) {
+                if ( v.Color  == ColorNoVisitado ) {
+                    v.Color = ColorPendiente;
+                    Pila.add(v);
+                }
+            }
+            u.Color = ColorVisitado;
+        }
+    }
+    for (Nodo n : Nodos)
+        n.Dibujar();
+}
+
+void MkGrafo()
+{
     int rmin,rmax;
     Nodo n,v;
-    size(800,600);
+    
     int T = height/Divisiones;
     int M = 5;  // Desorden
       
@@ -123,59 +177,7 @@ void setup()
         }
     }
 }
-
-void draw()
-{
-    background(ColorFondo);
-    cursor(CROSS);
-    strokeWeight(AnchoPincel);
-  
-    for (Nodo n : Nodos) 
-        n.DibujarAristas();
-  
-    if ( !Buscando ) {
-        for (Nodo n : Nodos) {
-            if ( MostrarId )
-                n.MostrarId();
-            if ( n.mouseIn()==true ) {
-                n.Color = n.Marcado ? ColorNodoMarcadoTocado : ColorNodoTocado;
-                n.MostrarId();
-            } else
-                n.Color = n.Marcado ? ColorNodoMarcado : ColorNodoNormal;
-            if ( n.Vecino == true )
-                n.Color = ColorNodoVecino;
-        }
-
-        // Aquí inicia el algoritmo de búsqueda en profundidad
-        if ( NodosMarcados == 1 && key == ' ' ) {
-            Buscando = true;
-            for (Nodo n : Nodos) {
-                n.Color = ColorNoVisitado;
-                n.Marcado = n.Vecino = false;
-            }
-            Pila.push( NodoMarcado1 );
-            //noLoop();
-        }
-    } else {
-        // Iteraciones de la búsqueda en profundidad
-        Nodo u;
-        if ( !Pila.isEmpty() && key==' ' ) {
-            u = Pila.pop();
-            for ( Nodo v : u.aristas ) {
-                if ( v.Color  == ColorNoVisitado ) {
-                    v.Color = ColorPendiente;
-                    Pila.add(v);
-                }
-            }
-            u.Color = ColorVisitado;
-            //delay(50);
-        }
-    }
-    for (Nodo n : Nodos)
-        n.Dibujar(); //<>//
-
-}
-
+ //<>//
 void mouseClicked()
 {
   Nodo n = null;
