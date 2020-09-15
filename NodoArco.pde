@@ -6,18 +6,23 @@
 
 class Nodo {
   int x, y, Id;
+  int OrdenDeVisita;
   color Color;
   boolean Marcado;
   boolean Vecino;
-  //float ax, ay, vx, vy;
+  boolean SeMuestraOrden;
+  Nodo padre;
   ArrayList<Nodo> aristas = new ArrayList();
-  Nodo(int x, int y) {
-    this.x = x;
-    this.y = y;
-    this.Color = ColorNodoNormal;
-    this.Marcado = false;
-    this.Vecino = false;
-    this.Id = CuantosNodosHay++;
+  Nodo(int X, int Y) {
+    x = X;
+    y = Y;
+    padre = null;
+    Color = ColorNodoNormal;
+    Marcado = false;
+    Vecino = false;
+    Id = CuantosNodosHay++;
+    OrdenDeVisita = 0;
+    SeMuestraOrden = false;
   }
   void AgregarArista(Nodo Vecino) {
     aristas.add(Vecino);
