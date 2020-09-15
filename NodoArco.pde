@@ -6,18 +6,23 @@
 
 class Nodo {
   int x, y, Id;
+  int OrdenDeVisita;
   color Color;
   boolean Marcado;
   boolean Vecino;
-  //float ax, ay, vx, vy;
+  boolean SeMuestraOrden;
+  Nodo padre;
   ArrayList<Nodo> aristas = new ArrayList();
-  Nodo(int x, int y) {
-    this.x = x;
-    this.y = y;
-    this.Color = ColorNodoNormal;
-    this.Marcado = false;
-    this.Vecino = false;
-    this.Id = CuantosNodosHay++;
+  Nodo(int X, int Y) {
+    x = X;
+    y = Y;
+    padre = null;
+    Color = ColorNodoNormal;
+    Marcado = false;
+    Vecino = false;
+    Id = CuantosNodosHay++;
+    OrdenDeVisita = 0;
+    SeMuestraOrden = false;
   }
   void AgregarArista(Nodo Vecino) {
     aristas.add(Vecino);
@@ -59,17 +64,6 @@ class Nodo {
     fill(this.Color);
     ellipse(x, y, Radio, Radio);
     stroke(25);
-  }
-  void Parpadeo() {
-    for ( int i=0 ; i<5 ; i++ ) {
-      fill(ColorPendiente);
-      ellipse(x, y, Radio+5, Radio+5);
-      delay(20);
-      fill(ColorNoVisitado);
-      ellipse(x, y, Radio+5, Radio+5);
-      delay(20);
-    }
-      
   }
   void MostrarId() {
     textSize(SizeId);

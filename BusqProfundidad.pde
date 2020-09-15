@@ -1,20 +1,22 @@
 /* 
     Para mostrar recorridos en espacios de búsqueda
     
-    Búsqueda en Profundidad
-    
-    Miguel Angel Norzagaray Cosío
+    Búsqueda en Profundidad simple. 
+    Al encontrar el nodo objetivo se detiene.
+        
+    Miguel Angel NOrzagaray Cosío
+
     UABCS/DSC
 */
 
 import java.util.Stack;
 
-int RadioMin = 10, RadioMax = 12;
+int RadioMin = 10, RadioMax = 20;
 int Radio = 10;
 boolean MostrarId = false;
 boolean Buscando = false;
 
-int Divisiones=16;
+int Divisiones=20;
 
 int AnchoPincel = 2;
 int SizeId = 12;
@@ -22,6 +24,8 @@ int SizeId = 12;
 int Tabulador = 8;
 
 color ColorFondo = 240;
+
+color colorNodoMeta = #FF00FF;
 
 // Para la edición inicial
 color ColorNodoNormal = #8080FF;
@@ -34,6 +38,7 @@ color ColorNodoVecino = #FF8000;
 color ColorNoVisitado = #0000FF;
 color ColorPendiente = #00FF00;
 color ColorVisitado = #FFFF00;
+color ColorCamino = #F000F0;
 
 color ColorAristaNormal = 150;
 color COlorAristaAdyacente = 50;
@@ -120,6 +125,8 @@ void MkGrafo()
               n = new Nodo( int(j*T+T/2+random(-T/M,T/M)),      // Columna
                             int(i*T+T/2+random(-T/M,T/M)) );    // Fila
               Nodos.add(n);
+              if ( random(50)<1 )
+                n.Color = colorNodoMeta;
         }
     rmin = 2;
     rmax = 3;
@@ -177,7 +184,93 @@ void MkGrafo()
         }
     }
 }
- //<>//
+
+void draw()
+{
+    background(ColorFondo);
+    cursor(CROSS);
+    strokeWeight(AnchoPincel);
+  
+    for (Nodo n : Nodos) 
+        n.DibujarAristas();
+  
+    if ( !Buscando ) {
+        for (Nodo n : Nodos) {
+            if ( MostrarId )
+                n.MostrarId();
+            if ( n.mouseIn()==true ) {
+                if ( n.Color != colorNodoMeta )
+                    n.Color = n.Marcado ? 
+                        ColorNodoMarcadoTocado : ColorNodoTocado;
+                n.MostrarId();
+            } else
+                if ( n.Color != colorNodoMeta )
+                  n.Color = n.Marcado ? 
+                    ColorNodoMarcado : ColorNodoNormal;
+            if ( n.Vecino == true )
+                if ( n.Color != colorNodoMeta )
+                    n.Color = ColorNodoVecino;
+        }
+
+        // Aquí inicia el algoritmo de búsqueda en profundidad
+        if ( NodosMarcados > 0  &&  key == ' ' ) {
+            Buscando = true;
+            for (Nodo n : Nodos) {
+                if ( n.Color != colorNodoMeta )
+                  n.Color = ColorNoVisitado;
+                n.Marcado = n.Vecino = false;
+            }
+            Pila.push( NodoMarcado1 );
+        }
+    } else {
+        // Iteraciones de la búsqueda en profundidad
+        Nodo u;
+        if ( !Pila.isEmpty() && key==' ' ) {
+            u = Pila.pop();
+            for ( Nodo v : u.aristas ) {
+                if ( v.Color == colorNodoMeta ) {
+                    v.padre = u;
+                    ObjetivoEncontrado(v);
+                }
+                if ( v.Color  == ColorNoVisitado ) {
+                    v.Color = ColorPendiente;
+                    v.padre = u;
+                    Pila.add(v);
+                }
+            }
+            u.Color = ColorVisitado;
+            //noLoop();
+        }
+    }
+    for (Nodo n : Nodos)
+        n.Dibujar(); //<>//
+}
+
+void ObjetivoEncontrado(Nodo p)
+{
+    fill(0);
+    textSize(24);
+    text("¡Nodo objetivo", 620, 50);
+    text("encontrado!", 620, 80);
+    noStroke();
+    fill(ColorCamino);
+    circle(p.x, p.y, Radio+5);
+    print("p="+p.Id);
+    while ( p.padre != null ) {
+      fill(ColorCamino);
+      circle(p.x, p.y, Radio+5);
+      p.MostrarId();
+      print(" -> "+p.padre.Id);
+      p = p.padre;
+    }
+    p.Color = colorNodoMeta;
+    p.Dibujar();
+    noFill();
+    circle(p.x, p.y, Radio+5);
+    p.MostrarId();
+    noLoop();
+}
+
 void mouseClicked()
 {
   Nodo n = null;
